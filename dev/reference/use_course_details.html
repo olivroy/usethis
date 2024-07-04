@@ -12,7 +12,7 @@ use_zip(). Only create_download_url() is exported."><meta property="og:image" co
     
     <a class="navbar-brand me-2" href="../index.html">usethis</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.6.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.2.3.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,10 +29,13 @@ use_zip(). Only create_download_url() is exported."><meta property="og:image" co
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/badge-accessibility.html">Exploring badge accessibility</a>
+    <a class="dropdown-item" href="../articles/usethis-setup.html">usethis setup</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Git and GitHub</h6>
     <a class="dropdown-item" href="../articles/git-credentials.html">Managing Git(Hub) Credentials</a>
     <a class="dropdown-item" href="../articles/pr-functions.html">Pull request helpers</a>
-    <a class="dropdown-item" href="../articles/usethis-setup.html">usethis setup</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
 </li>
 <li class="nav-item dropdown">
@@ -77,14 +80,20 @@ use_zip(). Only create_download_url() is exported."><meta property="og:image" co
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_download_url</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tidy_download</span><span class="op">(</span><span class="va">url</span>, destdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">tidy_unzip</span><span class="op">(</span><span class="va">zipfile</span>, cleanup <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">create_download_url</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>url</dt>
-<dd><p>a GitHub, DropBox, or Google Drive URL, as copied from a web
-browser.</p></dd>
+<dd><p>A GitHub, DropBox, or Google Drive URL.</p><ul><li><p>For <code>create_download_url()</code>: A URL copied from a web browser.</p></li>
+<li><p>For <code>tidy_download()</code>: A download link for a ZIP file, possibly behind a
+shortlink or other redirect. <code>create_download_url()</code> can be helpful for
+creating this URL from typical browser URLs.</p></li>
+</ul></dd>
 
 
 <dt>destdir</dt>
@@ -96,22 +105,26 @@ has different default behavior.</p></dd>
 <dt>zipfile</dt>
 <dd><p>Path to local ZIP file.</p></dd>
 
+
+<dt>cleanup</dt>
+<dd><p>Whether to delete the ZIP file after unpacking. In an
+interactive session, <code>cleanup = NA</code> leads to asking the user if they
+want to delete or keep the ZIP file.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="tidy-download-">tidy_download()<a class="anchor" aria-label="anchor" href="#tidy-download-"></a></h2>
     
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## function signature</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">tidy_download</span>(url, <span class="at">destdir =</span> <span class="fu">getwd</span>())</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># as called inside use_course()</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">tidy_download</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  url, <span class="do">## after post-processing with normalize_url()</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="co"># conspicuous_place() = `getOption('usethis.destdir')` or desktop or home</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="co"># directory or working directory</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="at">destdir =</span> destdir <span class="sc">%||%</span> <span class="fu">conspicuous_place</span>()</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># how it's used inside use_course()</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">tidy_download</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="co"># url has been processed with internal helper normalize_url()</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  url,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="co"># conspicuous_place() = `getOption('usethis.destdir')` or desktop or home</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="co"># directory or working directory</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="at">destdir =</span> destdir <span class="sc">%||%</span> <span class="fu">conspicuous_place</span>()</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>)</span></code></pre><p></p></div>
 <p>Special-purpose function to download a ZIP file and automatically determine
 the file name, which often determines the folder name after unpacking.
 Developed with DropBox and GitHub as primary targets, possibly via
@@ -126,7 +139,7 @@ connect timeout.</p><div class="section">
 <h3 id="dropbox">DropBox<a class="anchor" aria-label="anchor" href="#dropbox"></a></h3>
 
 
-<p>To make a folder available for ZIP download, create a shared link for it:</p><ul><li><p><a href="https://help.dropbox.com/files-folders/share/view-only-access" class="external-link">https://help.dropbox.com/files-folders/share/view-only-access</a></p></li>
+<p>To make a folder available for ZIP download, create a shared link for it:</p><ul><li><p><a href="https://help.dropbox.com/share/create-and-share-link" class="external-link">https://help.dropbox.com/share/create-and-share-link</a></p></li>
 </ul><p>A shared link will have this form:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.dropbox.com<span class="sc">/</span>sh<span class="sc">/</span><span class="dv">12345</span>abcde<span class="sc">/</span><span class="dv">6789</span>wxyz?dl<span class="ot">=</span><span class="dv">0</span></span></code></pre><p></p></div>
 <p>Replace the <code>dl=0</code> at the end with <code>dl=1</code> to create a download link:</p>
@@ -135,8 +148,8 @@ connect timeout.</p><div class="section">
 <p>This download link (or a shortlink that points to it) is suitable as input
 for <code>tidy_download()</code>. After one or more redirections, this link will
 eventually lead to a download URL. For more details, see
-<a href="https://help.dropbox.com/files-folders/share/force-download" class="external-link">https://help.dropbox.com/files-folders/share/force-download</a> and
-<a href="https://help.dropbox.com/installs-integrations/sync-uploads/download-entire-folders" class="external-link">https://help.dropbox.com/installs-integrations/sync-uploads/download-entire-folders</a>.</p>
+<a href="https://help.dropbox.com/share/force-download" class="external-link">https://help.dropbox.com/share/force-download</a> and
+<a href="https://help.dropbox.com/sync/download-entire-folders" class="external-link">https://help.dropbox.com/sync/download-entire-folders</a>.</p>
 </div>
 
 <div class="section">
@@ -204,10 +217,6 @@ hidden files, such as <code>.RData</code>, <code>.Rhistory</code>, and those bel
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu">tidy_download</span><span class="op">(</span><span class="st">"https://github.com/r-lib/rematch2/archive/main.zip"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu">tidy_download</span><span class="op">(</span><span class="st">"https://github.com/r-lib/rematch2/archive/main.zip"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">tidy_unzip</span><span class="op">(</span><span class="st">"rematch2-main.zip"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
